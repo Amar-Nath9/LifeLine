@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from prediction import predict_class
-import pandas as pd
+import pandas as pd 
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random string in production
@@ -115,6 +115,42 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
+
+#Routing for the Quiz part
+@app.route('/quiz')
+@login_required
+def quiz():
+    return render_template('quiz.html')
+
+@app.route('/submit_quiz', methods=['POST'])
+@login_required
+def submit_quiz():
+    answers = [
+        int(request.form.get('q1',0)),
+        int(request.form.get('q2',0)),
+        int(request.form.get('q3',0)),
+        int(request.form.get('q4',0)),
+        int(request.form.get('q5',0)),
+        int(request.form.get('q6',0)),
+        int(request.form.get('q7',0)),
+        int(request.form.get('q8',0)),
+        int(request.form.get('q9',0)),
+        int(request.form.get('q10',0)),
+        
+    ]
+    total_score = sum(answers)
+
+    if total_score<= 9:
+        interpretation = "You are unlikely to be experiencing depression."
+    elif total_score <= 18:
+        interpretation = "You may be experiencing mild depression. It's a good idea to talk to a mental health professional."
+    elif total_score <= 24:
+        interpretation = "You may be experiencing moderate depression. It's recommended that you seek help from a mental health professional."
+    else:
+        interpretation = "You may be experiencing severe depression. It's essential that you seek help from a mental health professional as soon as possible."
+    
+    return render_template('result.html', score=total_score, interpretation=interpretation)
+
 
 if __name__ == '__main__':
     with app.app_context():

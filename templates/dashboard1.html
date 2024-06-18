@@ -3,30 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dash.css') }}">
 </head>
-<body>
-    <h1>Dashboard</h1>
-    <form method="post">
-        <label for="user_text">Enter Text:</label>
-        <input type="text" id="user_text" name="user_text">
-        <button type="submit">Predict</button>
-    </form>
+<a href="{{ url_for('quiz') }}">Take the Depression Screening Quiz</a>
 
-    {% if user_text %}
-        <h2>Results for: {{ user_text }}</h2>
-        <p>Predicted Class: {{ predicted_class }} ({{ class_probs['suicidal'] > 0.5 and 'suicidal' or 'non-suicidal' }})</p>
-        <p>Non-Suicidal Probability: {{ class_probs['non-suicidal']*100|round(2) }}%</p>
-        <p>Suicidal Probability: {{ class_probs['suicidal']*100|round(2) }}%</p>
-    {% endif %}
+<body class="container">
+    <h1 class="my-4">Dashboard</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Predict Text</h2>
+            <form method="post" class="mb-4">
+                <div class="form-group">
+                    <label for="user_text">Enter Text:</label>
+                    <input type="text" id="user_text" name="user_text" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Predict</button>
+            </form>
 
-    <h2>Upload CSV for Batch Prediction</h2>
-    <form action="{{ url_for('upload_csv') }}" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="file">Upload CSV:</label>
-            <input type="file" id="file" name="file" class="form-control">
+            {% if user_text %}
+                <div class="alert alert-info">
+                    <h2>Results for: {{ user_text }}</h2>
+                    <p>Predicted Class: {{ predicted_class }} ({{ class_probs['suicidal'] > 0.5 and 'suicidal' or 'non-suicidal' }})</p>
+                    <p>Non-Suicidal Probability: {{ class_probs['non-suicidal']*100|round(2) }}%</p>
+                    <p>Suicidal Probability: {{ class_probs['suicidal']*100|round(2) }}%</p>
+                </div>
+            {% endif %}
         </div>
-        <button type="submit" class="btn btn-primary">Upload and Predict</button>
-    </form>
+        <div class="col-md-6">
+            <h2>Upload CSV for Prediction</h2>
+            <form action="{{ url_for('upload_csv') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Upload CSV:</label>
+                    <input type="file" id="file" name="file" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Upload and Predict</button>
+            </form>
+        </div>
+    </div>
 
     {% if batch_results %}
         <h2>Batch Prediction Results</h2>
@@ -34,6 +48,7 @@
             <thead>
                 <tr>
                     <th>Text</th>
+                    <th>Non-Suicidal Probability (%)</th>
                     <th>Suicidal Probability (%)</th>
                 </tr>
             </thead>
@@ -41,13 +56,14 @@
                 {% for result in batch_results %}
                     <tr>
                         <td>{{ result.text }}</td>
-                        <td>{{ result.suicidal_prob*100|round(2) }}</td>
+                        <td>{{ result.non_suicidal_prob|round(2) }}</td>
+                        <td>{{ result.suicidal_prob|round(2) }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% endif %}
 
-    <p><a href="{{ url_for('logout') }}">Logout</a></p>
+    <p><a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a></p>
 </body>
 </html>
