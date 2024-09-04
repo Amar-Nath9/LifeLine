@@ -61,17 +61,7 @@ source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 Prediction: 85% likelihood of being suicidal.
 </code></pre>
 
-<h2>Contributing</h2>
-<p>Contributions are welcome! Please fork this repository and submit a pull request for any improvements, bug fixes, or new features.</p>
 
-<h2>License</h2>
-<p>This project is licensed under the MIT License - see the <a href="LICENSE">LICENSE</a> file for details.</p>
-
-<h2>Acknowledgments</h2>
-<ul>
-    <li>Thanks to all contributors and users of this project.</li>
-    <li>Special thanks to open-source communities for providing amazing tools and resources.</li>
-</ul>
 
 </body>
 </html>
